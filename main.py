@@ -16,7 +16,7 @@ def main():
     search_query = f'cat:{CATEGORY}'
     
     SLACK_TOKEN = os.getenv("SLACK_BOT_TOKEN")
-    SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#can-I-get-a-paper")
+    SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#arxiv_bot_test")
 
     base_url = 'http://export.arxiv.org/api/query?'
     url = f'{base_url}search_query={search_query}&start=0&max_results={MAX_RESULTS}&sortBy=submittedDate&sortOrder=descending'
