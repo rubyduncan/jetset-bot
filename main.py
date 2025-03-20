@@ -14,6 +14,7 @@ def main():
 
     #to grab everything from the category "HE" 
     search_query = f'cat:{CATEGORY}'
+    MAX_RESULTS = 50
     
     SLACK_TOKEN = os.getenv("SLACK_BOT_TOKEN")
     SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#arxiv_bot_test")
