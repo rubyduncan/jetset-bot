@@ -10,7 +10,7 @@ def main():
     CATEGORY = 'astro-ph.HE'
     MAX_RESULTS = 100
     SLACK_TOKEN = os.getenv("SLACK_BOT_TOKEN")
-    SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#arxiv_bot_test")
+    SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#can-i-get-a-paper")
     
     #to use keywords for searching in the papers: 
     # ARXIV_QUERY = '(black hole OR AGN OR jet OR jet model)'
