@@ -40,7 +40,8 @@ def main():
         if day_before_yesterday_18utc <= published_dt < yesterday_18utc:
             arxiv_id = entry.id.split('/')[-1]
             title_raw = entry.title.strip()
-            title_bold = f"*{title_raw}*"  # Just bold title, no link
+            title_escaped = escape_slack_problems(title_raw)
+            title_bold = f"*{title_escaped}*"
             
             authors = ', '.join([author.name for author in entry.authors[:3]])
             if len(entry.authors) > 3:
