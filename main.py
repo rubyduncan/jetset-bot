@@ -4,15 +4,21 @@ import os
 from datetime import datetime, timezone
 
 def main():
-    ARXIV_QUERY = '(black hole OR AGN OR jet OR jet model)'
-    # '(ti:"black hole" OR abs:accretion)'
+
     CATEGORY = 'astro-ph.HE'
-    MAX_RESULTS = 5
+    
+    #to use keywords for searching in the papers: 
+    # ARXIV_QUERY = '(black hole OR AGN OR jet OR jet model)'
+    # '(ti:"black hole" OR abs:accretion)' #by title or abstract 
+    # search_query = f'all:{ARXIV_QUERY}+AND+cat:{CATEGORY}'
+
+    #to grab everything from the category "HE" 
+    search_query = f'cat:{CATEGORY}'
+    
     SLACK_TOKEN = os.getenv("SLACK_BOT_TOKEN")
-    SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#arxiv_bot_test")
+    SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#can-I-get-a-paper")
 
     base_url = 'http://export.arxiv.org/api/query?'
-    search_query = f'all:{ARXIV_QUERY}+AND+cat:{CATEGORY}'
     url = f'{base_url}search_query={search_query}&start=0&max_results={MAX_RESULTS}&sortBy=submittedDate&sortOrder=descending'
 
     response = requests.get(url)
