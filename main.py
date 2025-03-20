@@ -1,7 +1,7 @@
 import requests
 import feedparser
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
 def main():
     ARXIV_QUERY = '(black hole OR AGN OR jet OR jet model)'
