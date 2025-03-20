@@ -21,10 +21,10 @@ def main():
     #  today's date in UTC
     today = datetime.now(timezone.utc).date()
 
+    messages = []
+
     for entry in feed.entries:
         published_date = datetime.strptime(entry.published, "%Y-%m-%dT%H:%M:%SZ").date()
-
-        # for recent publications 
         if published_date == today:
             authors = ', '.join(author.name for author in entry.authors)
             msg = (
@@ -32,12 +32,15 @@ def main():
                 f"_Authors_: {authors}\n"
                 f"_Published_: {published_date.strftime('%b %d, %Y')}\n"
                 f"{entry.link}\n"
-                f"> {entry.summary.strip()[:300]}..."
+                f"> {entry.summary.strip()[:300]}...\n\n"
             )
-            post_to_slack(msg, SLACK_TOKEN, SLACK_CHANNEL)
-            
-        if not any(datetime.strptime(e.published, "%Y-%m-%dT%H:%M:%SZ").date() == today for e in feed.entries):
-            post_to_slack("No new black hole papers today on arXiv!", SLACK_TOKEN, SLACK_CHANNEL)
+            messages.append(msg)
+    
+    if messages:
+        combined_message = "*Today's New arXiv Papers on Fun Stuff:*\n\n" + "".join(messages)
+        post_to_slack(combined_message, SLACK_TOKEN, SLACK_CHANNEL)
+    else:
+        post_to_slack("No new black hole papers today on arXiv!", SLACK_TOKEN, SLACK_CHANNEL)
 
 def post_to_slack(message, token, channel):
     headers = {'Authorization': f'Bearer {token}'}
