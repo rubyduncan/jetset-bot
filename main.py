@@ -28,37 +28,83 @@ def main():
     today_18utc = now.replace(hour=18, minute=0, second=0, microsecond=0)
     yesterday_18utc = today_18utc - timedelta(days=1)
     day_before_yesterday_18utc = today_18utc - timedelta(days=2)
-
-    messages = []
+    
+    blocks = []
 
     for entry in feed.entries:
         published_dt = datetime.strptime(entry.published, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
-        #need to change this from yesterday, to day before 
-
+    
         if day_before_yesterday_18utc <= published_dt < yesterday_18utc:
-            author_names = [author.name for author in entry.authors[:3]]
-            authors = ', '.join(author_names)
+            arxiv_id = entry.id.split('/')[-1]
+            authors = ', '.join([author.name for author in entry.authors[:3]])
             if len(entry.authors) > 3:
                 authors += ', et al.'
-            msg = (
-                f"*{entry.title.strip()}*\n"
-                f"_Authors_: {authors}\n"
-                f"_Published_: {published_dt.strftime('%b %d, %Y %H:%M UTC')}\n"
-                f"{entry.link}\n"
-                f"> {entry.summary.strip()[:300]}...\n\n"
-            )
-            messages.append(msg)
+            abstract = ' '.join(entry.summary.strip().split('\n'))[:400] + "..."
+    
+            # Section block with title, authors, abstract
+            blocks.append({
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": f"*<{entry.link}|{entry.title.strip()}>*\n_Authors_: {authors}\n_Published_: {published_dt.strftime('%b %d, %Y %H:%M UTC')}_\n\n{abstract}"
+                }
+            })
+    
+            # Button block with arXiv and PDF links
+            blocks.append({
+                "type": "actions",
+                "elements": [
+                    {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "View on arXiv"},
+                        "url": f"https://arxiv.org/abs/{arxiv_id}"
+                    },
+                    {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "Download PDF"},
+                        "url": f"https://arxiv.org/pdf/{arxiv_id}.pdf"
+                    }
+                ]
+            })
+    
+            # Divider
+            blocks.append({"type": "divider"})
 
-    if messages:
-        combined_message = f"*New astro-ph.HE Papers Received (18:00 UTC Y'day → 18:00 UTC Today):*\n\n{''.join(messages)}"
-        post_to_slack(combined_message, SLACK_TOKEN, SLACK_CHANNEL)
+    if blocks:
+        # Optional: Add a header block at the top
+        header_block = {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": f"*New astro-ph.HE Papers Received*\n_(From {day_before_yesterday_18utc.strftime('%b %d %H:%M UTC')} to {yesterday_18utc.strftime('%b %d %H:%M UTC')})_\n"
+            }
+        }
+        blocks.insert(0, header_block)
+        blocks.insert(1, {"type": "divider"})
+
+        post_to_slack_blocks(blocks, SLACK_TOKEN, SLACK_CHANNEL)
+    
     else:
-        post_to_slack("No new astro-ph.HE papers in the past 24h (18:00 UTC → 18:00 UTC)!", SLACK_TOKEN, SLACK_CHANNEL)
+        post_to_slack_blocks([
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": f"No new astro-ph.HE papers between {day_before_yesterday_18utc.strftime('%b %d %H:%M UTC')} and {yesterday_18utc.strftime('%b %d %H:%M UTC')}."
+                }
+            }
+        ], SLACK_TOKEN, SLACK_CHANNEL)
 
-def post_to_slack(message, token, channel):
-    headers = {'Authorization': f'Bearer {token}'}
-    data = {'channel': channel, 'text': message}
-    response = requests.post('https://slack.com/api/chat.postMessage', headers=headers, data=data)
+def post_to_slack_blocks(blocks, token, channel):
+    headers = {
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'application/json'
+    }
+    payload = {
+        'channel': channel,
+        'blocks': blocks
+    }
+    response = requests.post('https://slack.com/api/chat.postMessage', headers=headers, json=payload)
     if not response.json().get('ok'):
         print(f"Slack error: {response.text}")
 
