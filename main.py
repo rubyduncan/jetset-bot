@@ -39,7 +39,7 @@ def main():
     
         if day_before_yesterday_18utc <= published_dt < yesterday_18utc:
             arxiv_id = entry.id.split('/')[-1]
-            title_raw = entry.title.strip()
+            title_raw = ' '.join(entry.title.strip().splitlines())
             title_escaped = escape_slack_problems(title_raw)
             title_bold = f"*{title_escaped}*"
             
