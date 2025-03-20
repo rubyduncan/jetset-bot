@@ -1,0 +1,27 @@
+name: Arxiv Slack Bot
+
+on:
+  schedule:
+    - cron: '0 8 * * *'  # Runs daily at 8:00 UTC
+  workflow_dispatch:     # Allows manual triggering
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run the bot
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_CHANNEL: '#black-hole-papers'
+        run: python main.py
