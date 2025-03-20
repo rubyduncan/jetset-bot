@@ -98,12 +98,28 @@ def main():
         blocks.insert(1, {"type": "divider"})
 
         #slack limit 
-        MAX_PAPERS = 15
-        MAX_BLOCKS = MAX_PAPERS * 3  # 3 blocks per paper
-        if len(blocks) > MAX_BLOCKS:
-            blocks = blocks[:MAX_BLOCKS]
-    
-        post_to_slack_blocks(blocks, SLACK_TOKEN, SLACK_CHANNEL)
+        # each message = 14 papers max → 48 blocks, plus header (2 blocks) = 50
+        PAPERS_PER_MESSAGE = 14
+        blocks_per_paper = 3
+        paper_blocks = [blocks[i:i+blocks_per_paper] for i in range(0, len(blocks), blocks_per_paper)]
+        
+        # Split into batches of 14 papers (max per message)
+        for i in range(0, len(paper_blocks), PAPERS_PER_MESSAGE):
+            batch = paper_blocks[i:i+PAPERS_PER_MESSAGE]
+            batch_blocks = [block for paper in batch for block in paper]  # Flatten list
+        
+            # Add header and divider at top
+            header_block = {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": f"*New astro-ph.HE Papers Received*\n_(From {day_before_yesterday_18utc.strftime('%b %d %H:%M UTC')} to {yesterday_18utc.strftime('%b %d %H:%M UTC')})_\n"
+                }
+            }
+            batch_blocks.insert(0, header_block)
+            batch_blocks.insert(1, {"type": "divider"})
+        
+            post_to_slack_blocks(batch_blocks, SLACK_TOKEN, SLACK_CHANNEL)
     
     else:
         post_to_slack_blocks([
