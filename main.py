@@ -3,6 +3,9 @@ import feedparser
 import os
 from datetime import datetime, timezone, timedelta
 
+def escape_slack_problems(text):
+    return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('|', '¦')
+
 def main():
     CATEGORY = 'astro-ph.HE'
     MAX_RESULTS = 100
@@ -23,7 +26,7 @@ def main():
     response = requests.get(url)
     feed = feedparser.parse(response.text)
 
-    # Define the 18:00 UTC time window, because this needs to be before 18:00
+    # define the 18:00 UTC time window, depending on whenever I am runnign it 
     now = datetime.now(timezone.utc)
     today_18utc = now.replace(hour=18, minute=0, second=0, microsecond=0)
     yesterday_18utc = today_18utc - timedelta(days=1)
@@ -36,21 +39,31 @@ def main():
     
         if day_before_yesterday_18utc <= published_dt < yesterday_18utc:
             arxiv_id = entry.id.split('/')[-1]
+            title_raw = entry.title.strip()
+            title_clean = escape_slack_problems(title_raw) #so the links will always come up in slack 
+            
             authors = ', '.join([author.name for author in entry.authors[:3]])
             if len(entry.authors) > 3:
                 authors += ', et al.'
             abstract = ' '.join(entry.summary.strip().split('\n'))[:400] + "..."
-    
-            # Section block with title, authors, abstract
+
+            text_block = (
+            f"*<https://arxiv.org/abs/{arxiv_id}|{title_clean}>*\n"
+            f"_Authors_: {authors}\n"
+            f"_Published_: {published_dt.strftime('%b %d, %Y %H:%M UTC')}_\n\n"
+            f"{abstract}"
+            )
+
+            # slack section block with title, authors, abstract
             blocks.append({
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": f"*<{entry.link}|{entry.title.strip()}>*\n_Authors_: {authors}\n_Published_: {published_dt.strftime('%b %d, %Y %H:%M UTC')}_\n\n{abstract}"
+                    "text": text_block
                 }
             })
     
-            # Button block with arXiv and PDF links
+            # button block with arXiv and PDF links
             blocks.append({
                 "type": "actions",
                 "elements": [
@@ -61,17 +74,17 @@ def main():
                     },
                     {
                         "type": "button",
-                        "text": {"type": "plain_text", "text": "Download PDF"},
+                        "text": {"type": "plain_text", "text": "View PDF"},
                         "url": f"https://arxiv.org/pdf/{arxiv_id}.pdf"
                     }
                 ]
             })
     
-            # Divider
+            # divider
             blocks.append({"type": "divider"})
 
     if blocks:
-        # Add header at top
+        #  header at top
         header_block = {
             "type": "section",
             "text": {
@@ -81,8 +94,8 @@ def main():
         }
         blocks.insert(0, header_block)
         blocks.insert(1, {"type": "divider"})
-    
-        # Limit to MAX_PAPERS to stay within Slack's 50 block limit
+
+        #slack limit 
         MAX_PAPERS = 15
         if len(blocks) > MAX_PAPERS * 3:
             blocks = blocks[:MAX_PAPERS * 3]
