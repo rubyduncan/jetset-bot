@@ -71,7 +71,7 @@ def main():
             blocks.append({"type": "divider"})
 
     if blocks:
-        # Optional: Add a header block at the top
+        # Add header at top
         header_block = {
             "type": "section",
             "text": {
@@ -81,7 +81,19 @@ def main():
         }
         blocks.insert(0, header_block)
         blocks.insert(1, {"type": "divider"})
-
+    
+        # Limit to MAX_PAPERS to stay within Slack's 50 block limit
+        MAX_PAPERS = 15
+        if len(blocks) > MAX_PAPERS * 3:
+            blocks = blocks[:MAX_PAPERS * 3]
+            blocks.append({
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": "_And more papers not shown due to Slack message limit..._"
+                }
+            })
+    
         post_to_slack_blocks(blocks, SLACK_TOKEN, SLACK_CHANNEL)
     
     else:
