@@ -1,0 +1,40 @@
+import requests
+import feedparser
+import os
+from datetime import datetime
+
+def main():
+    ARXIV_QUERY = 'black holes'
+    CATEGORY = 'astro-ph.HE'
+    MAX_RESULTS = 5
+    SLACK_TOKEN = os.getenv("SLACK_BOT_TOKEN")
+    SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#arxiv_bot_")
+
+    base_url = 'http://export.arxiv.org/api/query?'
+    search_query = f'all:{ARXIV_QUERY}+AND+cat:{CATEGORY}'
+    url = f'{base_url}search_query={search_query}&start=0&max_results={MAX_RESULTS}&sortBy=submittedDate&sortOrder=descending'
+
+    response = requests.get(url)
+    feed = feedparser.parse(response.text)
+
+    for entry in feed.entries:
+        published_date = datetime.strptime(entry.published, "%Y-%m-%dT%H:%M:%SZ")
+        authors = ', '.join(author.name for author in entry.authors)
+        msg = (
+            f"*{entry.title.strip()}*\n"
+            f"_Authors_: {authors}\n"
+            f"_Published_: {published_date.strftime('%b %d, %Y')}\n"
+            f"{entry.link}\n"
+            f"> {entry.summary.strip()[:300]}..."
+        )
+        post_to_slack(msg, SLACK_TOKEN, SLACK_CHANNEL)
+
+def post_to_slack(message, token, channel):
+    headers = {'Authorization': f'Bearer {token}'}
+    data = {'channel': channel, 'text': message}
+    response = requests.post('https://slack.com/api/chat.postMessage', headers=headers, data=data)
+    if not response.json().get('ok'):
+        print(f"Slack error: {response.text}")
+
+if __name__ == "__main__":
+    main()
