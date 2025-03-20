@@ -40,18 +40,19 @@ def main():
         if day_before_yesterday_18utc <= published_dt < yesterday_18utc:
             arxiv_id = entry.id.split('/')[-1]
             title_raw = entry.title.strip()
-            title_clean = escape_slack_problems(title_raw) #so the links will always come up in slack 
+            title_bold = f"*{title_raw}*"  # Just bold title, no link
             
             authors = ', '.join([author.name for author in entry.authors[:3]])
             if len(entry.authors) > 3:
                 authors += ', et al.'
+            
             abstract = ' '.join(entry.summary.strip().split('\n'))[:400] + "..."
-
+            
             text_block = (
-            f"*<https://arxiv.org/abs/{arxiv_id}|{title_clean}>*\n"
-            f"_Authors_: {authors}\n"
-            f"_Published_: {published_dt.strftime('%b %d, %Y %H:%M UTC')}_\n\n"
-            f"{abstract}"
+                f"{title_bold}\n"
+                f"_Authors_: {authors}\n"
+                f"_Published_: {published_dt.strftime('%b %d, %Y %H:%M UTC')}_\n\n"
+                f"{abstract}"
             )
 
             # slack section block with title, authors, abstract
