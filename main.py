@@ -23,17 +23,19 @@ def main():
     response = requests.get(url)
     feed = feedparser.parse(response.text)
 
-    # Define the 18:00 UTC time window
+    # Define the 18:00 UTC time window, because this needs to be before 18:00
     now = datetime.now(timezone.utc)
     today_18utc = now.replace(hour=18, minute=0, second=0, microsecond=0)
     yesterday_18utc = today_18utc - timedelta(days=1)
+    day_before_yesterday_18utc = today_18utc - timedelta(days=2)
 
     messages = []
 
     for entry in feed.entries:
         published_dt = datetime.strptime(entry.published, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+        #need to change this from yesterday, to day before 
 
-        if yesterday_18utc <= published_dt < today_18utc:
+        if day_before_yesterday_18utc <= published_dt < yesterday_18utc:
             authors = ', '.join(author.name for author in entry.authors)
             msg = (
                 f"*{entry.title.strip()}*\n"
