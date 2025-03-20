@@ -99,15 +99,9 @@ def main():
 
         #slack limit 
         MAX_PAPERS = 15
-        if len(blocks) > MAX_PAPERS * 3:
-            blocks = blocks[:MAX_PAPERS * 3]
-            blocks.append({
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": "_And more papers not shown due to Slack message limit..._"
-                }
-            })
+        MAX_BLOCKS = MAX_PAPERS * 3  # 3 blocks per paper
+        if len(blocks) > MAX_BLOCKS:
+            blocks = blocks[:MAX_BLOCKS]
     
         post_to_slack_blocks(blocks, SLACK_TOKEN, SLACK_CHANNEL)
     
