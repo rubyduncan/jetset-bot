@@ -36,7 +36,10 @@ def main():
         #need to change this from yesterday, to day before 
 
         if day_before_yesterday_18utc <= published_dt < yesterday_18utc:
-            authors = ', '.join(author.name for author in entry.authors)
+            author_names = [author.name for author in entry.authors[:3]]
+            authors = ', '.join(author_names)
+            if len(entry.authors) > 3:
+                authors += ', et al.'
             msg = (
                 f"*{entry.title.strip()}*\n"
                 f"_Authors_: {authors}\n"
