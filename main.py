@@ -7,20 +7,20 @@ def escape_slack_problems(text):
     return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('|', '¦')
 
 def main():
-    CATEGORY = 'astro-ph.HE'
     MAX_RESULTS = 100
     SLACK_TOKEN = os.getenv("SLACK_BOT_TOKEN")
     SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#can-i-get-a-paper")
-    
-    #to use keywords for searching in the papers: 
-    # ARXIV_QUERY = '(black hole OR AGN OR jet OR jet model)'
-    # '(ti:"black hole" OR abs:accretion)' #by title or abstract 
-    # search_query = f'all:{ARXIV_QUERY}+AND+cat:{CATEGORY}'
 
-    #to grab everything from the category "HE" 
+    #to use keywords for searching in the papers: ---------
+    ARXIV_QUERY = '(black hole OR AGN OR jet OR jet model)'
+    # '(ti:"black hole" OR abs:accretion)' #by title or abstract 
+    search_query = f'all:{ARXIV_QUERY}'
+
+    #to grab everything from a category ---------
+    #CATEGORY = 'astro-ph.HE'
+    #search_query = f'cat:{CATEGORY}'
 
     base_url = 'http://export.arxiv.org/api/query?'
-    search_query = f'cat:{CATEGORY}'
     url = f'{base_url}search_query={search_query}&start=0&max_results={MAX_RESULTS}&sortBy=submittedDate&sortOrder=descending'
 
     response = requests.get(url)
