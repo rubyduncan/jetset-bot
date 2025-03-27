@@ -12,7 +12,9 @@ def main():
     SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#can-i-get-a-paper")
 
     #to use keywords for searching in the papers: ---------
-    ARXIV_QUERY = '(black hole OR AGN OR jet OR jet model)'
+    ARXIV_QUERY = '(black hole OR AGN OR jet OR jet model OR neutrinos OR microquasar OR active galactic nuclei OR X-ray binary OR neutron star OR particle acceleration OR cosmic rays)'
+    #black hole, jet, blazar, neutrinos, microquasar, active galactic nuclei, X-ray binary, neutron star, particle acceleration, cosmic rays
+
     # '(ti:"black hole" OR abs:accretion)' #by title or abstract 
     search_query = f'all:{ARXIV_QUERY}'
 
