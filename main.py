@@ -18,16 +18,18 @@ def main():
     SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#arxiv_bot_test")
     
     #to use keywords for searching in the papers: ---------
-    ARXIV_KEYWORDS = '(black hole OR AGN OR jet OR jet model OR neutrinos OR microquasar OR active galactic nuclei OR X-ray binary OR neutron star OR particle acceleration OR cosmic rays OR accretion)'
-    EXCLUDE_TERMS = '(exoplanet OR main sequence OR pulsar OR neutron star OR tidal disruption event)' 
+    INCLUDE_TERMS = '(black hole OR AGN OR jet OR jet model OR neutrinos OR microquasar OR active galactic nuclei OR X-ray binary OR neutron star OR particle acceleration OR cosmic rays OR accretion)'
+    EXCLUDE_TERMS = '(exoplanet OR main sequence OR pulsar OR neutron star OR tidal disruption event OR pre-stellar OR mo)' 
 
-    INCLUDE_QUERY = f'(ti:{ARXIV_KEYWORDS} OR abs:{ARXIV_KEYWORDS})'
+    INCLUDE_QUERY = f'(ti:{INCLUDE_TERMS} OR abs:{INCLUDE_TERMS})'
     EXCLUDE_QUERY = f'NOT (ti:{EXCLUDE_TERMS} OR abs:{EXCLUDE_TERMS})'
     
     ARXIV_SECTION = '(cat:astro-ph.HE+OR+cat:astro-ph.IM+OR+cat:astro-ph.GA)'
+    EXCLUDE_SECTION = 'AND NOT (cat:physics.atom-ph OR cat:physics.optics OR cat:physics.chem-ph)'
+    
     #so that it is searching in the astro sections (can add more:  +OR+cat:astro-ph.GA) 
-
-    search_query = f'{INCLUDE_QUERY} AND {EXCLUDE_QUERY} AND {ARXIV_SECTION}'
+    search_query = f'{INCLUDE_QUERY} AND {EXCLUDE_QUERY} AND {INCLUDE_CATEGORIES} {EXCLUDE_CATEGORIES}'  
+    
     base_url = 'http://export.arxiv.org/api/query?'
     url = f'{base_url}search_query={search_query}&start=0&max_results={MAX_RESULTS}&sortBy=submittedDate&sortOrder=descending'
 
