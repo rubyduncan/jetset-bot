@@ -23,6 +23,6 @@ jobs:
       - name: Run the bot
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-          SLACK_CHANNEL: '#can-i-get-a-paper'
-          # SLACK_CHANNEL: '#arxiv_bot_test'
+          # SLACK_CHANNEL: '#can-i-get-a-paper'
+          SLACK_CHANNEL: '#arxiv_bot_test'
         run: python main.py
