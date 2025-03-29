@@ -7,10 +7,10 @@ def escape_slack_problems(text):
     return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('|', '¦')
 
 def main():
-    # now = datetime.now(timezone.utc)
-    # if now.weekday() >= 5:
-    #     print("nope")
-    #     return 
+    now = datetime.now(timezone.utc)
+    if now.weekday() >= 5:
+        print("nope")
+        return 
     
     MAX_RESULTS = 100
     SLACK_TOKEN = os.getenv("SLACK_BOT_TOKEN")
@@ -39,8 +39,8 @@ def main():
     # define the 18:00 UTC time window, depending on whenever I am runnign it 
     now = datetime.now(timezone.utc)
     today_18utc = now.replace(hour=18, minute=0, second=0, microsecond=0)
-    yesterday_18utc = today_18utc - timedelta(days=2)
-    day_before_yesterday_18utc = today_18utc - timedelta(days=3)
+    yesterday_18utc = today_18utc - timedelta(days=1)
+    day_before_yesterday_18utc = today_18utc - timedelta(days=2)
     
     blocks = []
 
