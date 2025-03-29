@@ -28,7 +28,7 @@ def main():
     EXCLUDE_SECTION = 'AND NOT (cat:physics.atom-ph OR cat:physics.optics OR cat:physics.chem-ph)'
     
     #so that it is searching in the astro sections (can add more:  +OR+cat:astro-ph.GA) 
-    search_query = f'{INCLUDE_QUERY} AND {EXCLUDE_QUERY} AND {INCLUDE_CATEGORIES} {EXCLUDE_CATEGORIES}'  
+    search_query = f'{INCLUDE_QUERY} AND {EXCLUDE_QUERY} AND {ARXIV_SECTION} {EXCLUDE_CATEGORIES}'  
     
     base_url = 'http://export.arxiv.org/api/query?'
     url = f'{base_url}search_query={search_query}&start=0&max_results={MAX_RESULTS}&sortBy=submittedDate&sortOrder=descending'
