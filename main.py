@@ -14,8 +14,8 @@ def main():
     
     MAX_RESULTS = 100
     SLACK_TOKEN = os.getenv("SLACK_BOT_TOKEN")
-    # SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#can-i-get-a-paper")
-    SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#arxiv_bot_test")
+    SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#can-i-get-a-paper")
+    # SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#arxiv_bot_test")
     
     #to use keywords for searching in the papers: ---------
     INCLUDE_TERMS = '(black hole OR AGN OR jet OR jet model OR neutrinos OR microquasar OR active galactic nuclei OR X-ray binary OR XRB OR neutron star OR particle         acceleration OR cosmic rays OR accretion)'
