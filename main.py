@@ -7,10 +7,10 @@ def escape_slack_problems(text):
     return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('|', '¦')
 
 def main():
-    now = datetime.now(timezone.utc)
-    if now.weekday() >= 5:
-        print("nope")
-        return 
+    # now = datetime.now(timezone.utc)
+    # if now.weekday() >= 5:
+    #     print("nope")
+    #     return 
     
     MAX_RESULTS = 100
     SLACK_TOKEN = os.getenv("SLACK_BOT_TOKEN")
