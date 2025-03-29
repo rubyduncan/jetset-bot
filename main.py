@@ -7,20 +7,22 @@ def escape_slack_problems(text):
     return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('|', '¦')
 
 def main():
+    now = datetime.now(timezone.utc)
+    if now.weekday() >= 5:
+        print("nope")
+        return 
+    
     MAX_RESULTS = 100
     SLACK_TOKEN = os.getenv("SLACK_BOT_TOKEN")
-    SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#can-i-get-a-paper")
-
+    # SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#can-i-get-a-paper")
+    SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#arxiv_bot_test")
+    
     #to use keywords for searching in the papers: ---------
-    ARXIV_QUERY = '(black hole OR AGN OR jet OR jet model OR neutrinos OR microquasar OR active galactic nuclei OR X-ray binary OR neutron star OR particle acceleration OR cosmic rays)'
-    #black hole, jet, blazar, neutrinos, microquasar, active galactic nuclei, X-ray binary, neutron star, particle acceleration, cosmic rays
+    ARXIV_KEYWORDS = '(black hole OR AGN OR jet OR jet model OR neutrinos OR microquasar OR active galactic nuclei OR X-ray binary OR neutron star OR particle acceleration OR cosmic rays)'
 
+    ARXIV_QUERY = f'(ti:{ARXIV_KEYWORDS} OR abs:{ARXIV_KEYWORDS})'
     # '(ti:"black hole" OR abs:accretion)' #by title or abstract 
-    search_query = f'all:{ARXIV_QUERY}'
-
-    #to grab everything from a category ---------
-    #CATEGORY = 'astro-ph.HE'
-    #search_query = f'cat:{CATEGORY}'
+    search_query = f'all:{ARXIV_QUERY}+AND+(cat:astro-ph.HE+OR+cat:astro-ph.GA+OR+cat:astro-ph.IM)' #so that it is searching in the astro sections
 
     base_url = 'http://export.arxiv.org/api/query?'
     url = f'{base_url}search_query={search_query}&start=0&max_results={MAX_RESULTS}&sortBy=submittedDate&sortOrder=descending'
