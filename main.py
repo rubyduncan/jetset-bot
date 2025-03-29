@@ -22,7 +22,7 @@ def main():
 
     ARXIV_QUERY = f'(ti:{ARXIV_KEYWORDS} OR abs:{ARXIV_KEYWORDS})'
     # '(ti:"black hole" OR abs:accretion)' #by title or abstract 
-    search_query = f'all:{ARXIV_QUERY}+AND+(cat:astro-ph.HE+OR+cat:astro-ph.GA+OR+cat:astro-ph.IM)' #so that it is searching in the astro sections
+    search_query = f'all:{ARXIV_QUERY}+AND+(cat:astro-ph.HE+OR+cat:astro-ph.IM)' #so that it is searching in the astro sections (can add more:  +OR+cat:astro-ph.GA) 
 
     base_url = 'http://export.arxiv.org/api/query?'
     url = f'{base_url}search_query={search_query}&start=0&max_results={MAX_RESULTS}&sortBy=submittedDate&sortOrder=descending'
