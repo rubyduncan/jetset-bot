@@ -33,8 +33,8 @@ def main():
     # define the 18:00 UTC time window, depending on whenever I am runnign it 
     now = datetime.now(timezone.utc)
     today_18utc = now.replace(hour=18, minute=0, second=0, microsecond=0)
-    yesterday_18utc = today_18utc - timedelta(days=1)
-    day_before_yesterday_18utc = today_18utc - timedelta(days=2)
+    yesterday_18utc = today_18utc - timedelta(days=2)
+    day_before_yesterday_18utc = today_18utc - timedelta(days=3)
     
     blocks = []
 
