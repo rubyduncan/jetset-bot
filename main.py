@@ -111,21 +111,21 @@ def main():
         blocks_per_paper = 3
         paper_blocks = [blocks[i:i+blocks_per_paper] for i in range(0, len(blocks), blocks_per_paper)]
         
-        # Split into batches of 14 papers (max per message)
         for i in range(0, len(paper_blocks), PAPERS_PER_MESSAGE):
             batch = paper_blocks[i:i+PAPERS_PER_MESSAGE]
             batch_blocks = [block for paper in batch for block in paper]  # Flatten list
         
-            # Add header and divider at top
-            header_block = {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": f"*New astro-ph.HE Papers Received*\n_(From {day_before_yesterday_18utc.strftime('%b %d %H:%M UTC')} to {yesterday_18utc.strftime('%b %d %H:%M UTC')})_\n"
+            if i == 0:
+                # Only add header + divider in the first batch
+                header_block = {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": f"*New astro-ph.HE Papers Received*\n_(From {day_before_yesterday_18utc.strftime('%b %d %H:%M UTC')} to {yesterday_18utc.strftime('%b %d %H:%M UTC')})_\n"
+                    }
                 }
-            }
-            batch_blocks.insert(0, header_block)
-            batch_blocks.insert(1, {"type": "divider"})
+                batch_blocks.insert(0, header_block)
+                batch_blocks.insert(1, {"type": "divider"})
         
             post_to_slack_blocks(batch_blocks, SLACK_TOKEN, SLACK_CHANNEL)
     
