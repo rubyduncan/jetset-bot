@@ -19,7 +19,7 @@ def main():
     
     #to use keywords for searching in the papers: ---------
     INCLUDE_TERMS = '(black hole OR AGN OR jet OR jet model OR neutrinos OR microquasar OR active galactic nuclei OR X-ray binary OR XRB OR neutron star OR particle acceleration OR cosmic rays OR accretion OR GRMHD)'
-    EXCLUDE_TERMS = '(exoplanet OR main sequence OR pulsar OR neutron star OR tidal disruption event OR pre–stellar OR asteroid OR Voigt)' 
+    EXCLUDE_TERMS = '(exoplanet OR main sequence OR pulsar OR neutron star OR tidal disruption event OR pre–stellar OR asteroid OR Voigt OR FRB)' 
 
     INCLUDE_QUERY = f'(ti:{INCLUDE_TERMS} OR abs:{INCLUDE_TERMS})'
     EXCLUDE_QUERY = f'NOT (ti:{EXCLUDE_TERMS} OR abs:{EXCLUDE_TERMS})'
@@ -88,6 +88,12 @@ def main():
                         "type": "button",
                         "text": {"type": "plain_text", "text": "View PDF"},
                         "url": f"https://arxiv.org/pdf/{arxiv_id}.pdf"
+                    },
+                    {
+                        "type": "button",
+                        "text": {"type": "plain_text", "text": "👍 Upvote"},
+                        "action_id": f"upvote_{arxiv_id}",  # For Slack to route the interaction
+                        "value": arxiv_id  # We'll receive this in the interaction payload
                     }
                 ]
             })
