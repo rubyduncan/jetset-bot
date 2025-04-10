@@ -18,7 +18,7 @@ def main():
     # SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#arxiv_bot_test")
     
     #to use keywords for searching in the papers: ---------
-    INCLUDE_TERMS = '(black hole OR AGN OR jet OR jet model OR neutrinos OR microquasar OR active galactic nuclei OR X-ray binary OR XRB OR neutron star OR particle acceleration OR cosmic rays OR accretion OR GRMHD)'
+    INCLUDE_TERMS = '(black hole OR AGN OR jet OR jet model OR neutrinos OR neutrino OR microquasar OR active galactic nuclei OR X-ray binary OR XRB OR neutron star OR particle acceleration OR cosmic rays OR accretion OR GRMHD)'
     EXCLUDE_TERMS = '(exoplanet OR main sequence OR pulsar OR neutron star OR tidal disruption event OR pre–stellar OR asteroid OR Voigt OR FRB)' 
 
     INCLUDE_QUERY = f'(ti:{INCLUDE_TERMS} OR abs:{INCLUDE_TERMS})'
