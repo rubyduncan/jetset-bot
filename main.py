@@ -19,7 +19,7 @@ def main():
     
     #to use keywords for searching in the papers: ---------
     INCLUDE_TERMS = '(black hole OR AGN OR jet OR jets OR jet model OR neutrinos OR neutrino OR microquasar OR active galactic nuclei OR X-ray binary OR XRB OR particle acceleration OR cosmic rays OR accretion OR GRMHD)'
-    EXCLUDE_TERMS = '(exoplanet OR main sequence OR pulsar OR neutron star OR Earth OR supernovae OR tidal disruption event OR supernova OR pre–stellar OR asteroid OR Voigt OR FRB OR Fast radio burst OR galaxy evolution OR Earth)' 
+    EXCLUDE_TERMS = '(exoplanet OR main sequence OR pulsar OR neutron star OR Earth OR planet OR comet OR martian OR supernovae OR tidal disruption event OR supernova OR pre–stellar OR asteroid OR Voigt OR FRB OR Fast radio burst OR galaxy evolution OR Earth)' 
 
     INCLUDE_QUERY = f'(ti:{INCLUDE_TERMS} OR abs:{INCLUDE_TERMS})'
     EXCLUDE_QUERY = f'NOT (ti:{EXCLUDE_TERMS} OR abs:{EXCLUDE_TERMS})'
