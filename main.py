@@ -12,20 +12,50 @@ def main():
         print("nope")
         return 
     
-    MAX_RESULTS = 100
+    MAX_RESULTS = 200
     SLACK_TOKEN = os.getenv("SLACK_BOT_TOKEN")
-    SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#can-i-get-a-paper")
-    # SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#arxiv_bot_test")
+    # SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#can-i-get-a-paper")
+    SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#arxiv_bot_test")
     
-    #to use keywords for searching in the papers: ---------
-    INCLUDE_TERMS = '(black hole OR AGN OR jet OR jets OR jet model OR neutrinos OR neutrino OR microquasar OR active galactic nuclei OR X-ray binary OR XRB OR particle acceleration OR cosmic rays OR accretion OR GRMHD)'
-    EXCLUDE_TERMS = '(exoplanet OR main sequence OR pulsar OR neutron star OR Earth OR planet OR comet OR martian OR supernovae OR tidal disruption event OR supernova OR pre–stellar OR asteroid OR Voigt OR FRB OR Fast radio burst OR galaxy evolution OR Earth)' 
+   INCLUDE_TERMS_LIST = [
+    "black hole", "AGN", "jet", "jet model", "neutrinos", "neutrino",
+    "microquasar", "active galactic nuclei", "X-ray binary", "XRB",
+    "particle acceleration", "cosmic rays", "accretion", "GRMHD"
+    ]
+
+    EXCLUDE_TERMS_LIST = [
+    "exoplanet", "main sequence", "pulsar", "neutron star", "Earth", "planet", "comet",
+    "martian", "supernovae", "tidal disruption event", "supernova", "pre–stellar",
+    "asteroid", "Voigt", "FRB", "Fast radio burst", "galaxy evolution", "Earth"
+    ]
 
     INCLUDE_QUERY = f'(ti:{INCLUDE_TERMS} OR abs:{INCLUDE_TERMS})'
     EXCLUDE_QUERY = f'NOT (ti:{EXCLUDE_TERMS} OR abs:{EXCLUDE_TERMS})'
     
     ARXIV_SECTION = '(cat:astro-ph.HE+OR+cat:astro-ph.IM+OR+cat:astro-ph.GA)'
     EXCLUDE_SECTION = 'AND NOT (cat:physics.atom-ph OR cat:physics.optics OR cat:physics.chem-ph)'
+
+    def build_query_block(terms, field="ti"):
+    # Wrap each term in quotes and prefix with field:
+        return " OR ".join([f'{field}:"{term}"' for term in terms])
+
+    # Build properly formatted query strings
+    include_title = build_query_block(INCLUDE_TERMS_LIST, "ti")
+    include_abs = build_query_block(INCLUDE_TERMS_LIST, "abs")
+    exclude_title = build_query_block(EXCLUDE_TERMS_LIST, "ti")
+    exclude_abs = build_query_block(EXCLUDE_TERMS_LIST, "abs")
+    
+    INCLUDE_QUERY = f"({include_title} OR {include_abs})"
+    EXCLUDE_QUERY = f"NOT ({exclude_title} OR {exclude_abs})"
+
+    # Build properly formatted query strings
+    # include_title = build_query_block(INCLUDE_TERMS_LIST, "ti")
+    # include_abs = build_query_block(INCLUDE_TERMS_LIST, "abs")
+    # exclude_title = build_query_block(EXCLUDE_TERMS_LIST, "ti")
+    # exclude_abs = build_query_block(EXCLUDE_TERMS_LIST, "abs")
+    
+    # INCLUDE_QUERY = f"({include_title} OR {include_abs})"
+    # EXCLUDE_QUERY = f"NOT ({exclude_title} OR {exclude_abs})"
     
     #so that it is searching in the astro sections (can add more:  +OR+cat:astro-ph.GA) 
     search_query = f'{INCLUDE_QUERY} AND {EXCLUDE_QUERY} AND {ARXIV_SECTION} {EXCLUDE_SECTION}'  
