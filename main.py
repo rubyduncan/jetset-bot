@@ -17,7 +17,7 @@ def main():
     # SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#can-i-get-a-paper")
     SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#arxiv_bot_test")
     
-   INCLUDE_TERMS_LIST = ["black hole", "AGN", "jet", "jet model", "neutrinos", "neutrino", "microquasar", "active galactic nuclei", "X-ray binary", "XRB", "particle acceleration", "cosmic rays", "accretion", "GRMHD"]
+    INCLUDE_TERMS_LIST = ["black hole", "AGN", "jet", "jet model", "neutrinos", "neutrino", "microquasar", "active galactic nuclei", "X-ray binary", "XRB", "particle acceleration", "cosmic rays", "accretion", "GRMHD"]
 
     EXCLUDE_TERMS_LIST = ["exoplanet", "main sequence", "pulsar", "neutron star", "Earth", "planet", "comet", "martian", "supernovae", "tidal disruption event", "supernova", "pre–stellar","asteroid", "Voigt", "FRB", "Fast radio burst", "galaxy evolution", "Earth"]
 
