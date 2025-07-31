@@ -21,12 +21,6 @@ def main():
 
     EXCLUDE_TERMS_LIST = ["exoplanet", "main sequence", "pulsar", "neutron star", "Earth", "planet", "comet", "martian", "supernovae", "tidal disruption event", "supernova", "pre–stellar","asteroid", "Voigt", "FRB", "Fast radio burst", "galaxy evolution", "Earth"]
 
-    INCLUDE_QUERY = f'(ti:{INCLUDE_TERMS} OR abs:{INCLUDE_TERMS})'
-    EXCLUDE_QUERY = f'NOT (ti:{EXCLUDE_TERMS} OR abs:{EXCLUDE_TERMS})'
-    
-    ARXIV_SECTION = '(cat:astro-ph.HE+OR+cat:astro-ph.IM+OR+cat:astro-ph.GA)'
-    EXCLUDE_SECTION = 'AND NOT (cat:physics.atom-ph OR cat:physics.optics OR cat:physics.chem-ph)'
-
     def build_query_block(terms, field="ti"):
     # Wrap each term in quotes and prefix with field:
         return " OR ".join([f'{field}:"{term}"' for term in terms])
@@ -39,6 +33,9 @@ def main():
     
     INCLUDE_QUERY = f"({include_title} OR {include_abs})"
     EXCLUDE_QUERY = f"NOT ({exclude_title} OR {exclude_abs})"
+    
+    ARXIV_SECTION = '(cat:astro-ph.HE+OR+cat:astro-ph.IM+OR+cat:astro-ph.GA)'
+    EXCLUDE_SECTION = 'AND NOT (cat:physics.atom-ph OR cat:physics.optics OR cat:physics.chem-ph)'
 
     # Build properly formatted query strings
     # include_title = build_query_block(INCLUDE_TERMS_LIST, "ti")
