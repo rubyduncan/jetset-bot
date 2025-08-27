@@ -14,8 +14,8 @@ def main():
     
     MAX_RESULTS = 200
     SLACK_TOKEN = os.getenv("SLACK_BOT_TOKEN")
-    # SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#can-i-get-a-paper")
-    SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#arxiv_bot_test")
+    SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#can-i-get-a-paper")
+    # SLACK_CHANNEL = os.getenv("SLACK_CHANNEL", "#arxiv_bot_test")
     
     INCLUDE_TERMS_LIST = ["black hole", "AGN", "jet", "jet model", "neutrinos", "neutrino", "microquasar", "active galactic nuclei", "X-ray binary", "XRB", "particle acceleration", "cosmic rays", "accretion", "GRMHD"]
 
