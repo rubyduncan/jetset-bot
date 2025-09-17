@@ -19,7 +19,7 @@ def main():
     
     INCLUDE_TERMS_LIST = ["black hole", "AGN", "jet", "jet model", "neutrinos", "neutrino", "microquasar", "active galactic nuclei", "X-ray binary", "XRB", "particle acceleration", "cosmic rays", "accretion", "GRMHD"]
 
-    EXCLUDE_TERMS_LIST = ["exoplanet", "main sequence", "pulsar", "neutron star", "Earth", "planet", "comet", "martian", "supernovae", "tidal disruption event", "supernova", "pre–stellar","asteroid", "Voigt", "FRB", "Fast radio burst", "galaxy evolution", "Earth"]
+    EXCLUDE_TERMS_LIST = ["exoplanet", "protostar", "Galaxy", "main sequence", "pulsar", "neutron star", "Earth", "planet", "comet", "martian", "supernovae", "tidal disruption event","merger" "supernova", "soil", "pre–stellar","asteroid", "Voigt", "FRB", "Fast radio burst", "galaxy evolution", "Earth"]
 
     def build_query_block(terms, field="ti"):
     # Wrap each term in quotes and prefix with field:
