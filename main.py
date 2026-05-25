@@ -170,7 +170,6 @@ def main():
         "comet",
         "martian",
         "supernovae",
-        "tidal disruption event",
         "merger",
         "supernova",
         "soil",
@@ -181,6 +180,12 @@ def main():
         "FRB",
         "Fast radio burst",
         "galaxy evolution",
+        "Gaia",
+        "quantum",
+        "primordial",
+        "star formation",
+        "quark",
+        
     ]
 
     include_title = build_query_block(include_terms, "ti")
@@ -192,7 +197,7 @@ def main():
     exclude_query = f"NOT ({exclude_title} OR {exclude_abs})"
 
     arxiv_section = "(cat:astro-ph.HE OR cat:astro-ph.IM OR cat:astro-ph.GA)"
-    exclude_section = "AND NOT (cat:physics.atom-ph OR cat:physics.optics OR cat:physics.chem-ph)"
+    exclude_section = "AND NOT (cat:physics.atom-ph OR cat:physics.optics OR cat:physics.chem-ph OR cat:hep-th)"
 
     search_query = f"{include_query} AND {exclude_query} AND {arxiv_section} {exclude_section}"
 
