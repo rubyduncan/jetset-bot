@@ -63,7 +63,7 @@ def add_reaction(token, channel, timestamp, reaction="thumbsup"):
         "https://slack.com/api/reactions.add",
         headers=headers,
         json=payload,
-        timeout=30,
+        timeout=120,
     )
 
     data = response.json()
@@ -134,7 +134,7 @@ def main():
         print("nope")
         return
 
-    max_results = 200
+    max_results = 100
     slack_token = os.getenv("SLACK_BOT_TOKEN")
     slack_channel = os.getenv("SLACK_CHANNEL", "#can-i-please-get-a-paper")
 
