@@ -36,7 +36,7 @@ def post_to_slack_blocks(blocks, token, channel, text="arXiv update", thread_ts=
         "https://slack.com/api/chat.postMessage",
         headers=headers,
         json=payload,
-        timeout=30,
+        timeout=120,
     )
 
     data = response.json()
