@@ -37,7 +37,7 @@ def post_to_slack_blocks(blocks, token, channel, text="arXiv update", thread_ts=
         "https://slack.com/api/chat.postMessage",
         headers=headers,
         json=payload,
-        timeout=120,
+        timeout=30,
     )
 
     data = response.json()
@@ -64,7 +64,7 @@ def add_reaction(token, channel, timestamp, reaction="thumbsup"):
         "https://slack.com/api/reactions.add",
         headers=headers,
         json=payload,
-        timeout=120,
+        timeout=30,
     )
 
     data = response.json()
@@ -161,31 +161,31 @@ def main():
 
     exclude_terms = [
         "exoplanet",
-        "protostar",
-        "Galaxy",
-        "main sequence",
-        "pulsar",
-        "neutron star",
-        "Earth",
-        "planet",
-        "comet",
-        "martian",
-        "supernovae",
-        "merger",
-        "supernova",
-        "soil",
-        "pre-stellar",
-        "pre–stellar",
-        "asteroid",
-        "Voigt",
-        "FRB",
-        "Fast radio burst",
-        "galaxy evolution",
-        "Gaia",
-        "quantum",
-        "primordial",
-        "star formation",
-        "quark",
+        # "protostar",
+        # "Galaxy",
+        # "main sequence",
+        # "pulsar",
+        # "neutron star",
+        # "Earth",
+        # "planet",
+        # "comet",
+        # "martian",
+        # "supernovae",
+        # "merger",
+        # "supernova",
+        # "soil",
+        # "pre-stellar",
+        # "pre–stellar",
+        # "asteroid",
+        # "Voigt",
+        # "FRB",
+        # "Fast radio burst",
+        # "galaxy evolution",
+        # "Gaia",
+        # "quantum",
+        # "primordial",
+        # "star formation",
+        # "quark",
         
     ]
 
@@ -212,7 +212,7 @@ def main():
         f"&sortOrder=descending"
     )
     time.sleep(5)
-    response = requests.get(url, timeout=120)
+    response = requests.get(url, timeout=30)
     response.raise_for_status()
 
     feed = feedparser.parse(response.text)
