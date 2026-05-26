@@ -1,5 +1,6 @@
 import os
 import requests
+import time
 import feedparser
 from datetime import datetime, timezone, timedelta
 
@@ -210,7 +211,7 @@ def main():
         f"&sortBy=submittedDate"
         f"&sortOrder=descending"
     )
-
+    time.sleep(5)
     response = requests.get(url, timeout=120)
     response.raise_for_status()
 
