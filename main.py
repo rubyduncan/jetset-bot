@@ -159,7 +159,7 @@ def main():
         f"{build_query_block(jet_terms, 'abs')})"
     )
     
-    include_query = f"({agn_query} AND {jet_query})"
+    include_terms = f"({agn_query} AND {jet_query})"
 
     exclude_terms = [
         "exoplanet", "protostar", "Galaxy", "main sequence", "pulsar",
@@ -169,12 +169,12 @@ def main():
         "Fast radio burst", "galaxy evolution",
     ]
 
-    include_query = (
+    include_terms = (
         f"({build_query_block(include_terms, 'ti')} OR "
         f"{build_query_block(include_terms, 'abs')})"
     )
 
-    exclude_query = (
+    exclude_terms = (
         f"NOT ({build_query_block(exclude_terms, 'ti')} OR "
         f"{build_query_block(exclude_terms, 'abs')})"
     )
@@ -193,7 +193,7 @@ def main():
         ")"
     )
 
-    search_query = f"{include_query} AND {exclude_query} AND {arxiv_section} {exclude_section}"
+    search_query = f"{include_terms} AND {exclude_terms} AND {arxiv_section} {exclude_section}"
 
     url = (
         f"{ARXIV_API}"
