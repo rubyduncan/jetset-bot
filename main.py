@@ -144,7 +144,6 @@ def main():
         "synchrotron",
         "inverse Compton",
         "SSC",
-        "
         "particle acceleration",
         "GRMHD",
         "SED",
