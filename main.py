@@ -197,11 +197,11 @@ def main():
     include_query = f"({include_title} OR {include_abs})"
     exclude_query = f"NOT ({exclude_title} OR {exclude_abs})"
 
-    arxiv_section = "(cat:astro-ph.HE OR cat:astro-ph.IM OR cat:astro-ph.GA)"
-    exclude_section = "AND NOT (cat:physics.atom-ph OR cat:physics.optics OR cat:physics.chem-ph OR cat:hep-th OR cat:gr-qc)"
-
+    arxiv_section = "(cat:astro-ph.HE OR cat:astro-ph.CO)"
+    exclude_section = "AND NOT (cat:hep-th OR cat:gr-qc)"
+    
     search_query = f"{include_query} AND {exclude_query} AND {arxiv_section} {exclude_section}"
-
+    
     base_url = "http://export.arxiv.org/api/query?"
     url = (
         f"{base_url}"
@@ -211,8 +211,12 @@ def main():
         f"&sortBy=submittedDate"
         f"&sortOrder=descending"
     )
+    
+    print(search_query)
+    print(url)
+    
     time.sleep(5)
-    response = requests.get(url, timeout=30)
+    response = requests.get(url, timeout=120)
     response.raise_for_status()
 
     feed = feedparser.parse(response.text)
