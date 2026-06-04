@@ -144,8 +144,19 @@ def main():
         f"{build_query_block(exclude_terms, 'abs')})"
     )
 
-    arxiv_section = "(cat:astro-ph.HE OR cat:astro-ph.IM OR cat:astro-ph.GA)"
-    exclude_section = "AND NOT (cat:physics.atom-ph OR cat:physics.optics OR cat:physics.chem-ph)"
+    arxiv_section = "(cat:astro-ph.HE OR cat:astro-ph.CO)"
+
+    exclude_section = (
+        "AND NOT ("
+        "cat:gr-qc OR "
+        "cat:hep-th OR "
+        "cat:hep-ph OR "
+        "cat:quant-ph OR "
+        "cat:physics.atom-ph OR "
+        "cat:physics.optics OR "
+        "cat:physics.chem-ph"
+        ")"
+    )
 
     search_query = f"{include_query} AND {exclude_query} AND {arxiv_section} {exclude_section}"
 
