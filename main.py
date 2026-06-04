@@ -120,22 +120,47 @@ def main():
     if not token:
         raise RuntimeError("SLACK_BOT_TOKEN is not set")
 
-        include_terms = [
-        "AGN",
-        "active galactic nuclei",
-        "radio galaxy",
-        "blazar",
-        "low luminosity AGN",
-        "LLAGN",
-        "microquasar",
-        "X-ray binary",
-        "accreting black hole",
-        "supermassive black hole",
+    agn_terms = [
+    "AGN",
+    "active galactic nuclei",
+    "radio galaxy",
+    "blazar",
+    "LLAGN",
+    "low luminosity AGN",
+    "supermassive black hole",
+    "microquasar",
+    "X-ray binary",
+    "quasar",
+    "X-ray binary", 
+    "radio",
+    "X-ray"
+    "XRB",
+    ]
+    
+    jet_terms = [
+        "jet",
         "relativistic jet",
         "AGN jet",
+        "synchrotron",
+        "inverse Compton",
+        "SSC",
+        "
         "particle acceleration",
         "GRMHD",
+        "SED",
     ]
+    
+    agn_query = (
+        f"({build_query_block(agn_terms, 'ti')} OR "
+        f"{build_query_block(agn_terms, 'abs')})"
+    )
+    
+    jet_query = (
+        f"({build_query_block(jet_terms, 'ti')} OR "
+        f"{build_query_block(jet_terms, 'abs')})"
+    )
+    
+    include_query = f"({agn_query} AND {jet_query})"
 
     exclude_terms = [
         "exoplanet", "protostar", "Galaxy", "main sequence", "pulsar",
