@@ -192,7 +192,7 @@ def main():
         ")"
     )
 
-    search_query = f"{include_terms} AND {exclude_terms} AND {arxiv_section} AND {exclude_section}"
+    search_query = f"{include_terms} AND {arxiv_section} AND {exclude_section}"
 
     url = (
         f"{ARXIV_API}"
