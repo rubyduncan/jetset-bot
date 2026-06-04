@@ -144,7 +144,7 @@ def main():
         f"{build_query_block(exclude_terms, 'abs')})"
     )
 
-    arxiv_section = "(cat:astro-ph.HE OR cat:astro-ph.CO)"
+    arxiv_section = "(cat:astro-ph.HE)"
 
     exclude_section = (
         "AND NOT ("
