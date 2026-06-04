@@ -120,10 +120,21 @@ def main():
     if not token:
         raise RuntimeError("SLACK_BOT_TOKEN is not set")
 
-    include_terms = [
-        "black hole", "AGN", "jet", "jet model", "neutrinos", "neutrino",
-        "microquasar", "active galactic nuclei", "X-ray binary", "XRB",
-        "particle acceleration", "cosmic rays", "accretion", "GRMHD",
+        include_terms = [
+        "AGN",
+        "active galactic nuclei",
+        "radio galaxy",
+        "blazar",
+        "low luminosity AGN",
+        "LLAGN",
+        "microquasar",
+        "X-ray binary",
+        "accreting black hole",
+        "supermassive black hole",
+        "relativistic jet",
+        "AGN jet",
+        "particle acceleration",
+        "GRMHD",
     ]
 
     exclude_terms = [
