@@ -32,7 +32,13 @@ def post_to_slack(blocks, token, channel, text="arXiv paper", thread_ts=None):
     if thread_ts is not None:
         payload["thread_ts"] = thread_ts
 
-    response = requests.post(SLACK_POST_URL, headers=headers, json=payload)
+    response = requests.post(
+        SLACK_POST_URL,
+        headers=headers,
+        json=payload,
+        timeout=30,
+    )
+
     data = response.json()
 
     if not data.get("ok"):
@@ -43,6 +49,14 @@ def post_to_slack(blocks, token, channel, text="arXiv paper", thread_ts=None):
 
 def build_query_block(terms, field="ti"):
     return " OR ".join([f'{field}:"{term}"' for term in terms])
+
+
+def contains_excluded_term(entry, exclude_terms):
+    title = " ".join(entry.title.strip().split())
+    abstract = " ".join(entry.summary.strip().split())
+    text = f"{title} {abstract}".lower()
+
+    return any(term.lower() in text for term in exclude_terms)
 
 
 def make_paper_blocks(entry, arxiv_id, published_dt):
@@ -78,15 +92,6 @@ def make_paper_blocks(entry, arxiv_id, published_dt):
                     "text": {"type": "plain_text", "text": "View PDF"},
                     "url": f"https://arxiv.org/pdf/{arxiv_id}.pdf",
                 },
-                {
-                    "type": "button",
-                    "text": {"type": "plain_text", "text": "👍 Upvote"},
-                    "action_id": "upvote_paper",
-                    "value": json.dumps({
-                        "arxiv_id": arxiv_id,
-                        "votes": 0,
-                    }),
-                },
             ],
         },
     ]
@@ -114,93 +119,99 @@ def main():
         return
 
     token = os.getenv("SLACK_BOT_TOKEN")
-    # channel = os.getenv("SLACK_CHANNEL", "#can-i-get-a-paper")
     channel = os.getenv("SLACK_CHANNEL", "#arxiv_bot_test")
 
     if not token:
         raise RuntimeError("SLACK_BOT_TOKEN is not set")
 
-    agn_terms = [
-    "AGN",
-    "active galactic nuclei",
-    "radio galaxy",
-    "blazar",
-    "LLAGN",
-    "low luminosity AGN",
-    "supermassive black hole",
-    "microquasar",
-    "X-ray binary",
-    "quasar",
-    "X-ray binary", 
-    "radio",
-    "X-ray"
-    "XRB",
-    ]
-    
-    jet_terms = [
-        "jet",
+    include_terms = [
+        "AGN",
+        "active galactic nuclei",
+        "radio galaxy",
+        "blazar",
+        "LLAGN",
+        "low luminosity AGN",
+        "microquasar",
+        "X-ray binary",
+        "XRB",
         "relativistic jet",
         "AGN jet",
         "synchrotron",
         "inverse Compton",
-        "SSC",
         "particle acceleration",
         "GRMHD",
         "SED",
     ]
-    
-    agn_query = (
-        f"({build_query_block(agn_terms, 'ti')} OR "
-        f"{build_query_block(agn_terms, 'abs')})"
-    )
-    
-    jet_query = (
-        f"({build_query_block(jet_terms, 'ti')} OR "
-        f"{build_query_block(jet_terms, 'abs')})"
-    )
-    
-    include_terms = f"({agn_query} AND {jet_query})"
 
     exclude_terms = [
-        "exoplanet", "protostar", "Galaxy", "main sequence", "pulsar",
-        "neutron star", "Earth", "planet", "comet", "martian",
-        "supernovae", "tidal disruption event", "merger", "supernova",
-        "soil", "pre-stellar", "asteroid", "Voigt", "FRB",
-        "Fast radio burst", "galaxy evolution",
+        "exoplanet",
+        "protostar",
+        "main sequence",
+        "pulsar",
+        "neutron star",
+        "earth",
+        "planet",
+        "comet",
+        "martian",
+        "supernovae",
+        "tidal disruption event",
+        "merger",
+        "supernova",
+        "soil",
+        "pre-stellar",
+        "asteroid",
+        "voigt",
+        "FRB",
+        "fast radio burst",
+        "galaxy evolution",
+        "Higgs",
+        "collider",
+        "LHC",
+        "standard model",
+        "invariant mass",
+        "four-body decay",
+        "quark",
+        "lepton",
+        "dark matter",
+        "dark energy",
+        "inflation",
+        "primordial black hole",
+        "quantum gravity",
+        "modified gravity",
+        "holographic",
+        "wormhole",
     ]
 
-    include_terms = (
+    include_query = (
         f"({build_query_block(include_terms, 'ti')} OR "
         f"{build_query_block(include_terms, 'abs')})"
     )
 
-    exclude_terms = (
-        f"NOT ({build_query_block(exclude_terms, 'ti')} OR "
-        f"{build_query_block(exclude_terms, 'abs')})"
-    )
-
-    arxiv_section = "(cat:astro-ph.HE)"
+    arxiv_section = "(cat:astro-ph.HE OR cat:astro-ph.CO)"
 
     exclude_section = (
         "AND NOT ("
         "cat:gr-qc OR "
         "cat:hep-th OR "
         "cat:hep-ph OR "
-        "cat:quant-ph OR "
-        "cat:physics.atom-ph OR "
-        "cat:physics.optics OR "
-        "cat:physics.chem-ph"
+        "cat:hep-ex OR "
+        "cat:quant-ph"
         ")"
     )
 
-    search_query = f"{include_terms} AND {exclude_terms} AND {arxiv_section} {exclude_section}"
+    search_query = f"{include_query} AND {arxiv_section} {exclude_section}"
 
     url = (
         f"{ARXIV_API}"
         f"search_query={requests.utils.quote(search_query)}"
-        f"&start=0&max_results=200"
-        f"&sortBy=submittedDate&sortOrder=descending"
+        f"&start=0"
+        f"&max_results=200"
+        f"&sortBy=submittedDate"
+        f"&sortOrder=descending"
     )
+
+    print(f"URL length: {len(url)}")
+    print(search_query)
 
     response = requests.get(url, timeout=30)
     response.raise_for_status()
@@ -215,10 +226,14 @@ def main():
 
     for entry in feed.entries:
         published_dt = datetime.strptime(
-            entry.published, "%Y-%m-%dT%H:%M:%SZ"
+            entry.published,
+            "%Y-%m-%dT%H:%M:%SZ",
         ).replace(tzinfo=timezone.utc)
 
         if day_before_yesterday_18utc <= published_dt < yesterday_18utc:
+            if contains_excluded_term(entry, exclude_terms):
+                continue
+
             papers.append((entry, published_dt))
 
     if not papers:
@@ -243,7 +258,7 @@ def main():
         return
 
     header = (
-        f"*New matching astro-ph papers*\n"
+        "*New matching astro-ph papers*\n"
         f"_{day_before_yesterday_18utc.strftime('%b %d %H:%M UTC')} to "
         f"{yesterday_18utc.strftime('%b %d %H:%M UTC')}_\n"
         f"{len(papers)} papers found."
