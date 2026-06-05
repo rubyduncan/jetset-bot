@@ -108,8 +108,8 @@ def main():
         return
 
     token = os.getenv("SLACK_BOT_TOKEN")
-    # channel = os.getenv("SLACK_CHANNEL", "#can-i-get-a-paper")
-    channel = os.getenv("SLACK_CHANNEL", "#arxiv_bot_test")
+    channel = os.getenv("SLACK_CHANNEL", "#can-i-get-a-paper")
+    # channel = os.getenv("SLACK_CHANNEL", "#arxiv_bot_test")
 
     if not token:
         raise RuntimeError("SLACK_BOT_TOKEN is not set")
